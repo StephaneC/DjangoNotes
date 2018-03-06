@@ -33,3 +33,11 @@ class NoteOutputSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Note
         fields = '__all__'
+
+    def to_representation(self, obj):
+        return {
+            'author': obj['author'],
+            'note': obj['note'], 
+            'done': obj['done'],
+            'date': obj['date']
+        }

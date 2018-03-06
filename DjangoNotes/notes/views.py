@@ -2,15 +2,21 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
+from django.core import serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from models import Note
 from session import Session
 from rest_framework import generics, status
 from serializers import NoteInputSerializer, NoteOutputSerializer
+import redis
+import json
+
 
 import logging
 #import pdb; pdb.set_trace()
+
+r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 @api_view(['GET', 'POST'])
 def notes_list_api(request):
@@ -18,15 +24,24 @@ def notes_list_api(request):
     List all code snippets, or create a new snippet.
     """
     if request.method == 'GET':
-        notes = Session().get()
-        serializer = NoteInputSerializer(notes, many=True)
+        notes = r.lrange('notes', 0, 100)
+        decoded = []
+        if(len(notes) >0):
+            for n in notes:
+                decoded.append(json.loads(n))
+                        
+        serializer = NoteOutputSerializer(decoded, many=True)
+        #if(serializer.is_valid()):
         return Response(serializer.data)
+        #return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     elif request.method == 'POST':
         serializer = NoteInputSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             logging.warning('serializer:%s', serializer.data) 
-            Session().add(serializer)
+            #json = serializers.serialize('json', serializer.data)
+            r.lpush('notes', json.dumps(serializer.data))
+            Session().add(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

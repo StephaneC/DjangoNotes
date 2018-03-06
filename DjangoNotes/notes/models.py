@@ -2,9 +2,13 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from datetime import datetime
+import time 
+import redis 
+import pickle
 # Create your models here.
 class Note(models.Model):
+    
+
     note = models.TextField()
     done = models.BooleanField(default=False)
     author = models.TextField(default='Anonymous')
@@ -17,4 +21,4 @@ class Note(models.Model):
         self.note = note
         self.done = False
         self.author = "Anonymous"
-        self.date = datetime.now()
+        self.date = time.time()*1000

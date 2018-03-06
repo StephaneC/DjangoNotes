@@ -1,12 +1,20 @@
-# install framwork
+# install framework
 pip install django djangorestframework coreapi
 
-# Create django project
+# Create Django project
 django-admin.py startproject DjangoNotes
 
-# Add module
+# Add modules
 python manage.py startapp users
 python manage.py startapp notes
 
-#Run 
+# dependencies
+pip install django
+pip install djangorestframework
+pip install django-redis
+
+# Run 
 python manage.py runserver
+
+# before commit:
+find . -name "*.pyc" -type f -delete
