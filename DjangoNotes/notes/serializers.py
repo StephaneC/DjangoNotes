@@ -25,7 +25,8 @@ class NoteInputSerializer(serializers.BaseSerializer):
     def to_internal_value(self, validated_data):
         logging.debug('create note')
         note = Note(
-            note=validated_data.get('note')
+            note=validated_data.get('note'),
+            user=self.context.get('request').user
         )
         return note
 

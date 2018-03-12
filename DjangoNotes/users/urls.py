@@ -3,5 +3,5 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from users import views
  
 urlpatterns = [
-    url(r'^users/$', views.UsersList.as_view(), name='users-list'),
+    url(r'^users/$', views.user_list_api, name='users-list'),
 ]

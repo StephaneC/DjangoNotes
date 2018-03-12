@@ -1,24 +1,38 @@
 from rest_framework import serializers
-from models import User
+from models import User, Token
+import logging
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class TokenSerializer(serializers.BaseSerializer):
+    class Meta:
+        model = Token
+        fields = ('token', 'duration')
+
+class UserSerializer(serializers.BaseSerializer):
     class Meta:
         model = User
-        fields = ('username', 'date', 'photo')
+        fields = ('username', 'date', 'pwd', 'urlPhoto')
     
     def to_representation(self, obj):
-        return {
-            'username': obj.username,
-            'date': obj.date, 
-            'urlPhoto': obj.urlPhoto
-        }
+        if type(obj) is User: 
+            return {
+                'username': obj.username,
+                'date': obj.date, 
+                'urlPhoto': obj.urlPhoto, 
+                'pwd' : obj.pwd
+            }
+        else:
+            return {
+                'username': obj['username'],
+                'date': obj['date'], 
+                'urlPhoto': obj['urlPhoto'], 
+                'pwd' : obj['pwd']
+            }
 
     def to_internal_value(self, validated_data):
         logging.debug('create user')
         user = User(
             username=validated_data.get('username'),
-            date=validated_data.get('date'),
             urlPhoto=validated_data.get('urlPhoto'),
-            password=validated_data.get('password')
+            password=validated_data.get('pwd')
         )
-        return note
+        return user
