@@ -50,8 +50,8 @@ def notes_list_api(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@authentication_classes((CustumAuthentication))
 @api_view(['GET', 'PUT', 'DELETE'])
+@authentication_classes((CustumAuthentication))
 def notes_api(request):
     """
     Retrieve, update or delete a code snippet.

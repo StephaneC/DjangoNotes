@@ -16,5 +16,9 @@ pip install django-redis
 # Run 
 python manage.py runserver
 
-# before commit:
+# before commit (it no .gitignore):
 find . -name "*.pyc" -type f -delete
+
+# WIP
+* DO PUT/DELETE/GET for a specific note
+* Refactoring of session. SHould be in a specific file in DjangoNote shared between project.
